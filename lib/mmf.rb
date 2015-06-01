@@ -104,7 +104,13 @@ private
 
   def request(method, endpoint, params)
     uri  = "#{ROOT_URI}/#{endpoint}"
-    opts = { params: params, headers: {'Api-Key' => client_key} }
+    
+    if(method == :post)
+      opts = { body: params.to_json, headers: {'Api-Key' => client_key, 'Content-Type'=>'application/json' } }
+    else
+      opts = { params: params, headers: {'Api-Key' => client_key} }
+    end
+    
     resp = @client.send(method, uri, opts)
     find_relevant_data(JSON.parse(resp.body))
   end
